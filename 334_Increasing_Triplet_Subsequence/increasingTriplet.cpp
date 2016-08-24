@@ -1,3 +1,8 @@
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
 class Solution {
 public:
     bool increasingTriplet(vector<int>& nums) {
@@ -40,3 +45,11 @@ public:
         return false;
     }
 };
+
+int main() {
+	Solution solution;
+	vector<int> nums = { 9,13,8,7,11,0,12 };
+	bool status = solution.increasingTriplet(nums);
+	cout << status << endl;
+	return 0;
+}
