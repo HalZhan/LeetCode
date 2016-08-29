@@ -49,98 +49,116 @@ var toTree = function(arr) {
  * @return {number}
  */
 var rob = function(root) {
-    // 遍历
-    var doSearch = function(node, list) {
-        if (node) {
-            list.push(node.val);
-            var left = node.left;
-            var right = node.right;
-            if (left && left.left) {
-                doSearch(left.left, list);
-            }
-            if (left && left.right) {
-                doSearch(left.right, list);
-            }
-            if (right && right.left) {
-                doSearch(right.left, list);
-            }
-            if (right && right.right) {
-                doSearch(right.right, list);
-            }
-        }
-    };
-    // 对数组求和
-    var doSum = function(arr) {
-        var ans = 0;
-        for (var i = 0; i < arr.length; i++) {
-            ans += arr[i] || 0;
-        }
-        return ans;
-    };
-    // 求和比较
-    var maxArrsSum = function(rootVal, arrs1, arrs2) {
-        var ans = 0;
-        rootVal = rootVal || 0;
-        for (var j = 0; j < arrs2.length; j++) {
-            var tmp = doSum(arrs2[j]);
-            for (var i = 0; i < arrs1.length; i++) {
-                var tmp2 = doSum(arrs1[i]);
-                var tmpSum = tmp + tmp2;
-                if (i && j) {
-                    tmpSum += rootVal;
+    // tree to array
+    var dealTree = function(rootNode) {
+        var arr = [];
+        if(rootNode) {
+            var que = [rootNode];
+            var no = 0;
+            while(que.length) {
+                var curNode = que.pop();
+                curNode['no'] = no++;
+                arr.push(curNode);
+                if(curNode.left) {
+                    que.unshift(curNode.left);
+                } 
+                if(curNode.right) {
+                    que.unshift(curNode.right);
                 }
-                ans = ans >= tmpSum ? ans : tmpSum;
             }
         }
-        return ans;
+        return arr;
     };
-    // 从左右孩子出发
-    var rootVal = root ? root.val : 0;
-    var leftLists = [
-        [],
-        [],
-        []
-    ];
-    var rightLists = [
-        [],
-        [],
-        []
-    ];
-    if (root) {
-        // 左孩子开始
-        doSearch(root.left, leftLists[0]);
-        // 左孙子
-        if (root.left) {
-            var left2 = root.left.left;
-            var leftr = root.left.right;
-            if (left2) {
-                doSearch(left2, leftLists[1]);
+    // judge link
+    var isLinked = function(houses, stolenNos, curNo) {
+        var isLinked = false;
+        var curNode = houses[curNo];
+        for(var i=0;i<stolenNos.length;i++) {
+            var stolenNo = stolenNos[i];
+            var stolenHouse = houses[stolenNo];
+            if(stolenHouse.left && stolenHouse.left.no === curNo) {
+                isLinked = true;
+                break;
             }
-            if (leftr) {
-                doSearch(leftr, leftLists[2]);
+            else if(stolenHouse.right && stolenHouse.right.no === curNo) {
+                isLinked = true;
+                break;
             }
-        }
-        // 右孩子开始
-        doSearch(root.right, rightLists[0]);
-        // 右孙子
-        if (root.right) {
-            var right2 = root.right.right;
-            var rightl = root.right.left;
-            if (rightl) {
-                doSearch(rightl, rightLists[1]);
+            else if(curNode.left && curNode.left.no === stolenNo) {
+                isLinked = true;
+                break;
             }
-            if (right2) {
-                doSearch(right2, rightLists[2]);
+            else if(curNode.right && curNode.right.no === stolenNo) {
+                isLinked = true;
+                break;
+            }
+            else if(curNo === stolenNo) {
+                isLinked = true;
+                break;
             }
         }
+        return isLinked;
+    };
+    // max value of array
+    var getMaxValue = function(arr) {
+        var val = -1;
+        for(var i=0;i<arr.length;i++) {
+            val = val >= arr[i] ? val : arr[i];
+        }
+        return val;
+    };
+    // slice array
+    var sliceArray = function(arr, val) {
+        var ret = [];
+        if(arr.length) {
+            for(var i=0;i<arr.length;i++) {
+                ret.push(arr[i]);
+                if(arr[i] === val) {
+                    break;
+                }
+            }
+        }
+        return ret;
+    };
+    // begin to steal
+    var steal = function(houses, stolenNos, curNo, curSum) {
+        if(curNo >= houses.length) {
+            return curSum;
+        }
+        if(!isLinked(houses, stolenNos, curNo)) {
+            var curNode = houses[curNo];
+            curSum += curNode.val;
+            stolenNos.push(curNo);
+        }
+        // 递归回溯
+        var tmpSum = curSum;
+        var beginNo = getMaxValue(stolenNos) + 1;
+        var nosLen = stolenNos.length;
+        while(beginNo < houses.length) {
+            if(!isLinked(houses, stolenNos, beginNo)) {
+                var tmp = steal(houses, stolenNos, beginNo, tmpSum);
+                curSum = curSum >= tmp ? curSum : tmp;
+                stolenNos = stolenNos.slice(0, nosLen);
+            }
+            beginNo++;
+        }
+        return curSum;
+    };
+    var houses = dealTree(root);
+    var maxSum = 0;
+    for(var i=0;i<houses.length;i++) {
+        var stolenNos = [];
+        var curSum = steal(houses, stolenNos, i, 0);
+        maxSum = maxSum >= curSum ? maxSum : curSum;
     }
-    return maxArrsSum(rootVal, leftLists, rightLists);
+    return maxSum;
 };
 
-// [4,1,null,2,null,3]
-// [4,null,3,null,1,2]
-var arr = [2, 1, 3, null, 4];
+// var arr = [4,1,null,2,null,3]
+// var arr = [4,null,3,null,1,2]
+// var arr = [2, 1, 3, null, 4];
 // var arr = [4,null,3,null,1,2]; 
+var arr = [41,37,44,24,39,42,48,1,35,38,40,null,43,46,49,0,2,30,36,null,null,null,null,null,null,45,47,null,null,null,null,null,4,29,32,null,null,null,null,null,null,3,9,26,null,31,34,null,null,7,11,25,27,null,null,33,null,6,8,10,16,null,null,null,28,null,null,5,null,null,null,null,null,15,19,null,null,null,null,12,null,18,20,null,13,17,null,null,22,null,14,null,null,21,23];
 console.log('array: ', arr);
 var rootNode = toTree(arr);
 console.log(rootNode);
