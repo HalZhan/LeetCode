@@ -147,22 +147,18 @@ var rob = function(root) {
     // begin to steal
     var steal = function(houses, stolenNos, curNo, curSum) {
         var totalSize = houses.length;
-        if(curNo >= totalSize || isLinked(houses, stolenNos, curNo)) {
+        if(curNo >= totalSize) {
             return curSum;
         }
-        var curNode = houses[curNo];
-        curSum += curNode.val;
-        stolenNos[curNo] = true;;
-        // 递归回溯
-        var tmpSum = curSum;
-        var beginNo = getMaxIndex(stolenNos) + 1;
-        while(beginNo < totalSize) {
-            var tmp = steal(houses, stolenNos, beginNo, tmpSum);
-            curSum = curSum >= tmp ? curSum : tmp;
-            resetArray(stolenNos, totalSize, false, beginNo);
-            beginNo++;
+        if(isLinked(houses, stolenNos, curNo)) {
+            resetArray(stolenNos, totalSize, false, curNo);
         }
-        return curSum;
+        else {
+            var curNode = houses[curNo];
+            curSum += curNode.val;
+            stolenNos[curNo] = true;
+        }
+        return steal(houses, stolenNos, curNo+1, curSum);
     };
     var houses = dealTree(root);
     var totalSize = houses.length;
@@ -175,11 +171,11 @@ var rob = function(root) {
     return maxSum;
 };
 
-// var arr = [4,1,null,2,null,3]
+var arr = [4,1,null,2,null,3]
 // var arr = [4,null,3,null,1,2]
 // var arr = [2, 1, 3, null, 4];
 // var arr = [4,null,3,null,1,2]; 
-var arr = [41,37,44,24,39,42,48,1,35,38,40,null,43,46,49,0,2,30,36,null,null,null,null,null,null,45,47,null,null,null,null,null,4,29,32,null,null,null,null,null,null,3,9,26,null,31,34,null,null,7,11,25,27,null,null,33,null,6,8,10,16,null,null,null,28,null,null,5,null,null,null,null,null,15,19,null,null,null,null,12,null,18,20,null,13,17,null,null,22,null,14,null,null,21,23];
+// var arr = [41,37,44,24,39,42,48,1,35,38,40,null,43,46,49,0,2,30,36,null,null,null,null,null,null,45,47,null,null,null,null,null,4,29,32,null,null,null,null,null,null,3,9,26,null,31,34,null,null,7,11,25,27,null,null,33,null,6,8,10,16,null,null,null,28,null,null,5,null,null,null,null,null,15,19,null,null,null,null,12,null,18,20,null,13,17,null,null,22,null,14,null,null,21,23];
 console.log('array: ', arr);
 var rootNode = toTree(arr);
 console.log(rootNode);
