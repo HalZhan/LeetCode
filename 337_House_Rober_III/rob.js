@@ -73,8 +73,12 @@ var rob = function(root) {
     var isLinked = function(houses, stolenNos, curNo) {
         var isLinked = false;
         var curNode = houses[curNo];
-        for(var i=0;i<stolenNos.length;i++) {
-            var stolenNo = stolenNos[i];
+        var totalSize = houses.length;
+        for(var i=0;i<totalSize;i++) {
+            if(!stolenNos[i]) {
+                continue;
+            }
+            var stolenNo = i;
             var stolenHouse = houses[stolenNo];
             if(stolenHouse.left && stolenHouse.left.no === curNo) {
                 isLinked = true;
@@ -99,6 +103,17 @@ var rob = function(root) {
         }
         return isLinked;
     };
+    // max index of array
+    var getMaxIndex = function(arr) {
+        var idx = -1;
+        var totalSize = arr.length;
+        for(var i=0;i<totalSize;i++) {
+            if(arr[i]) {
+                idx = idx >= i ? idx : i;
+            }
+        }
+        return idx;
+    };
     // max value of array
     var getMaxValue = function(arr) {
         var val = -1;
@@ -106,6 +121,15 @@ var rob = function(root) {
             val = val >= arr[i] ? val : arr[i];
         }
         return val;
+    };
+    // reset array
+    var resetArray = function(arr, totalSize, val,startIdx) {
+        if(totalSize && startIdx >= 0 && startIdx < totalSize) {
+            for(var i=startIdx;i<totalSize;i++) {
+                arr[i] = val;
+            }
+        }
+        return arr;
     };
     // slice array
     var sliceArray = function(arr, val) {
@@ -122,32 +146,29 @@ var rob = function(root) {
     };
     // begin to steal
     var steal = function(houses, stolenNos, curNo, curSum) {
-        if(curNo >= houses.length) {
+        var totalSize = houses.length;
+        if(curNo >= totalSize || isLinked(houses, stolenNos, curNo)) {
             return curSum;
         }
-        if(!isLinked(houses, stolenNos, curNo)) {
-            var curNode = houses[curNo];
-            curSum += curNode.val;
-            stolenNos.push(curNo);
-        }
+        var curNode = houses[curNo];
+        curSum += curNode.val;
+        stolenNos[curNo] = true;;
         // 递归回溯
         var tmpSum = curSum;
-        var beginNo = getMaxValue(stolenNos) + 1;
-        var nosLen = stolenNos.length;
-        while(beginNo < houses.length) {
-            if(!isLinked(houses, stolenNos, beginNo)) {
-                var tmp = steal(houses, stolenNos, beginNo, tmpSum);
-                curSum = curSum >= tmp ? curSum : tmp;
-                stolenNos = stolenNos.slice(0, nosLen);
-            }
+        var beginNo = getMaxIndex(stolenNos) + 1;
+        while(beginNo < totalSize) {
+            var tmp = steal(houses, stolenNos, beginNo, tmpSum);
+            curSum = curSum >= tmp ? curSum : tmp;
+            resetArray(stolenNos, totalSize, false, beginNo);
             beginNo++;
         }
         return curSum;
     };
     var houses = dealTree(root);
+    var totalSize = houses.length;
     var maxSum = 0;
-    for(var i=0;i<houses.length;i++) {
-        var stolenNos = [];
+    for(var i=0;i<totalSize;i++) {
+        var stolenNos = resetArray([], totalSize, false, 0);
         var curSum = steal(houses, stolenNos, i, 0);
         maxSum = maxSum >= curSum ? maxSum : curSum;
     }
