@@ -3,54 +3,44 @@
  * @param {number} target
  * @return {number}
  */
-var combinationSum4 = function(nums, target) {
-    var len = nums.length;
-    var count = 0;
-    if(len === 0) {
-        return count;
-    }
-    if(len === 1) {
-        if(nums[0] === target) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
-    nums.sort(function(a, b) {
-        return a - b;
-    });
-    var search = function(arr, idx, tar) {
-        if(idx < len) {
-            if(arr[idx] === tar) {
-                return 1;
+// var combinationSum4 = function(nums, target) {
+//     const totalLen = nums.length;
+//     let result = 0;
+//     const search = function(nums, target) {
+//         for(let i=0;i<totalLen;i++) {
+//             if(nums[i] === target) {
+//                 result++;
+//                 return;
+//             }
+//             else if(nums[i] < target) {
+//                 search(nums, target-nums[i]);
+//             }
+//             else {
+//                 return;
+//             }
+//         }
+//     };
+//     search(nums, target);
+//     return result;
+// };
+var combinationSum4 = function (nums, target) {
+    const dp = [1];
+    nums.sort((a, b) => { return a - b; })
+    for (let i = 1; i <= target; i++) {
+        dp.push(0);
+        for (let num of nums) {
+            if (num <= i) {
+                dp[i] += dp[i - num];
             }
-            else if(arr[idx] < tar) {
-                var count0 = search(arr, 0, tar-arr[idx]);
-                var count1 = search(arr, idx+1, tar);
-                return count0 + count1;
-            }
-            else if(arr[idx] > tar) {
-                return 0;
+            else {
+                break;
             }
         }
-        return 0;
     }
-    for(var i=0;i<len;i++) {
-        if(nums[i] === target) {
-            count += 1;
-        }
-        else if(nums[i] < target) {
-            count += search(nums, 0, target-nums[i]);
-        }
-        else {
-            break;
-        }
-    }
-    return count;
+    return dp[target];
 };
 
 // var nums = [1, 2, 3] ,target = 4; // 7
 // var nums = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25], target = 10; //9
-var nums = [1,2,3], target = 32;
+var nums = [1, 2, 3], target = 32;
 console.log(combinationSum4(nums, target));
