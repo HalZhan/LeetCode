@@ -24,14 +24,16 @@ var getSkyline = function (buildings) {
     const createBitmap = function (width, height) {
         let bitmap = null;
         if (width && height) {
-            bitmap = [];
-            for (let i = 0; i <= height; i++) {
-                let str = '';
-                for (let j = 0; j <= width; j++) {
-                    str += '0';
-                }
-                bitmap.push(str);
-            }
+            // bitmap = [];
+            // for (let i = 0; i <= height; i++) {
+                
+            //     let str = '';
+            //     for (let j = 0; j <= width; j++) {
+            //         str += '0';
+            //     }
+            //     bitmap.push(str);
+            // }
+            bitmap = Array(height+1).fill(new Uint8Array(width+1).fill(0));
         }
         return bitmap;
     };
@@ -48,12 +50,14 @@ var getSkyline = function (buildings) {
             for (let tuple of tuples) {
                 for (let y = 0; y <= tuple[2]; y++) {
                     for (let x = tuple[0]; x <= tuple[1]; x++) {
-                        bitmap[y] = updateString(bitmap[y], x, '1');
+                        // bitmap[y] = updateString(bitmap[y], x, '1');
+                        bitmap[y][x] = 1;
                     }
                 }
             }
             for (let x = minX; x <= maxX; x++) {
-                bitmap[0] = updateString(bitmap[0], x, '1');
+                bitmap[0][x] = 1;
+                // bitmap[0] = updateString(bitmap[0], x, '1');
             }
         }
     };
@@ -123,13 +127,13 @@ var getSkyline = function (buildings) {
 };
 
 // let buildings = [];
-let buildings = [
-    [2, 9, 10],
-    [3, 7, 15],
-    [5, 12, 12],
-    [15, 20, 10],
-    [19, 24, 8]
-];
+// let buildings = [
+//     [2, 9, 10],
+//     [3, 7, 15],
+//     [5, 12, 12],
+//     [15, 20, 10],
+//     [19, 24, 8]
+// ];
 let buildings = [
     [0, 2147483647, 2147483647]
 ];

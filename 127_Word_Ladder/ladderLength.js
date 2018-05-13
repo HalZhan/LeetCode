@@ -29,6 +29,9 @@ var ladderLength = function (beginWord, endWord, wordList) {
                 if (wordA.charAt(i) != wordB.charAt(i)) {
                     dis++;
                 }
+                if (dis > 1) {
+                    return Infinity;
+                }
             }
         }
         return dis;
@@ -78,6 +81,14 @@ var ladderLength = function (beginWord, endWord, wordList) {
         res = search(map, beginIdx, endIdx, {}) + 1;
         if (!isFinite(res)) {
             res = 0;
+        }
+        let S = {}, dist = {}, prev = {},min = -Infinity, max = Infinity;
+        for (let i = 1; i <= dim; i++) {
+            dist[i] = Infinity;
+        }
+        dist[1] = 0;
+        for(let j=1;j<=dim;j++) {
+            min = max;
         }
     }
     return res;
