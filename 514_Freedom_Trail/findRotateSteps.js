@@ -8,7 +8,6 @@ var findRotateSteps = function (ring, key) {
     RING_LEGNTH = ring.length, 
     KEY_LENGTH = key.length, 
     CACHE = new Array(RING_LEGNTH).fill(null).map(() => new Array(KEY_LENGTH).fill(null));
-    let result = Infinity;
 
     const findLeft = function (beginIdx = 0, kIdx) {
         let i = beginIdx + 1;
@@ -59,9 +58,7 @@ var findRotateSteps = function (ring, key) {
         return CACHE[rIdx][kIdx] = Math.min(countI, countJ);
     }
 
-    result = rotate(0, 0, 0);
-
-    return result;
+    return rotate(0, 0);
 };
 
 const
