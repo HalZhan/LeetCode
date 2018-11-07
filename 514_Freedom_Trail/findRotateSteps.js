@@ -53,7 +53,6 @@ var findRotateSteps = function (ring, key) {
         }
         let countI = distI + 1 + rotate(i, kIdx + 1),
             countJ = distJ + 1 + rotate(j, kIdx + 1);
-        // countCur = (ring[rIdx] == key[kIdx]) ? rotate(rIdx, kIdx + 1, count + 1) : Infinity;
 
         return CACHE[rIdx][kIdx] = Math.min(countI, countJ);
     }
