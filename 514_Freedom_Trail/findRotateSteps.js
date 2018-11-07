@@ -4,10 +4,10 @@
  * @return {number}
  */
 var findRotateSteps = function (ring, key) {
-    const 
-    RING_LEGNTH = ring.length, 
-    KEY_LENGTH = key.length, 
-    CACHE = new Array(RING_LEGNTH).fill(null).map(() => new Array(KEY_LENGTH).fill(null));
+    const
+        RING_LEGNTH = ring.length,
+        KEY_LENGTH = key.length,
+        CACHE = new Array(RING_LEGNTH).fill(null).map(() => new Array(KEY_LENGTH).fill(null));
 
     const findLeft = function (beginIdx = 0, kIdx) {
         let i = beginIdx + 1;
@@ -37,7 +37,7 @@ var findRotateSteps = function (ring, key) {
         if (kIdx >= KEY_LENGTH) {
             return 0;
         }
-        if(CACHE[rIdx][kIdx] != null) {
+        if (CACHE[rIdx][kIdx] != null) {
             return CACHE[rIdx][kIdx];
         }
         // console.log(`rIdx: ${rIdx}, cur_ring_char: ${ring[rIdx]}, kIdx: ${kIdx}, cur_key_char: ${key[kIdx]}`);
@@ -51,10 +51,10 @@ var findRotateSteps = function (ring, key) {
         while (distJ < 0) {
             distJ += RING_LEGNTH;
         }
-        let countI = distI + 1 +  rotate(i, kIdx + 1),
+        let countI = distI + 1 + rotate(i, kIdx + 1),
             countJ = distJ + 1 + rotate(j, kIdx + 1);
-            // countCur = (ring[rIdx] == key[kIdx]) ? rotate(rIdx, kIdx + 1, count + 1) : Infinity;
-        
+        // countCur = (ring[rIdx] == key[kIdx]) ? rotate(rIdx, kIdx + 1, count + 1) : Infinity;
+
         return CACHE[rIdx][kIdx] = Math.min(countI, countJ);
     }
 
@@ -84,6 +84,6 @@ const
 
     ring = "xrrakuulnczywjs",
     key = "jrlucwzakzussrlckyjjsuwkuarnaluxnyzcnrxxwruyr"
-    // => 204
+// => 204
 
 console.log(`Result: ${findRotateSteps(ring, key)}`)
