@@ -69,8 +69,8 @@ const
     // key = "gd"
     // => 4
 
-    // ring = "godding",
-    // key = "gdo"
+    ring = "godding",
+    key = "gdo"
     // => 6
 
     // ring = "iotfo",
@@ -81,8 +81,8 @@ const
     // key = "gdo"
     // => 8
 
-    ring = "xrrakuulnczywjs",
-    key = "jrlucwzakzussrlckyjjsuwkuarnaluxnyzcnrxxwruyr"
-// => 204
+    // ring = "xrrakuulnczywjs",
+    // key = "jrlucwzakzussrlckyjjsuwkuarnaluxnyzcnrxxwruyr"
+    // => 204
 
 console.log(`Result: ${findRotateSteps(ring, key)}`)
